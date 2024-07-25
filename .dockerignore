@@ -1,0 +1,6 @@
+# Disallow all files. We are folowing the best security practices, right? {padme.jpg}
+*
+# Allow specific files
+!Dockerfile
+!logger.conf
+!process.py
