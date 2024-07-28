@@ -11,4 +11,4 @@ with open("lines.txt", "w") as file:
         line = f"http://api.tech.com/item/{random.randint(0, random_range)} {random.randint(0, random_range)}\n"
         file.write(line)
 
-print(f"{num_lines} lines written to output.txt")
+print(f"{num_lines} lines written to lines.txt")
