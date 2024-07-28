@@ -2,7 +2,7 @@ import os
 import argparse
 import logging
 import logging.config
-from heapq import heappush, heappop
+from heapq import heappush, heappushpop
 
 # Why don't I just use print for a single log line?
 logging.config.fileConfig(
@@ -23,6 +23,7 @@ def get_top_lines(file_path: str, n: int) -> list:
         list: A list of URLs corresponding to the top 'n' largest values.
     """
     heap = []
+    position = 1
     with open(file_path, "r") as file:
         # Read the file by line
         for line in file:
@@ -36,16 +37,20 @@ def get_top_lines(file_path: str, n: int) -> list:
                 logger.warning(f"Invalid value in line: {line}")
                 continue
 
-            # Push the Value, URL tuple to the heap
-            heappush(heap, (value, url))
+            # We can ensure FIFO order by using the line position in the file as a tie-breaker
+            item = (value, -position, url)
 
-            # If the heap size exceeds n, pop the smallest value
-            if len(heap) > n:
-                heappop(heap)
+            if len(heap) <= n - 1:
+                # Push an item to the heap
+                heappush(heap, item)
+            else:
+                # If the heap size is going to exeed n, push an item and pop the smallest value
+                heappushpop(heap, item)
+            position += 1
 
-    # Get URLs from the heap and sort by values in descending order
-    top_lines = sorted(heap, key=lambda x: x[0], reverse=True)
-    return [url for _, url in top_lines]
+    # Sort the heap in descending order
+    heap.sort(reverse=True)
+    return [url for _, _, url in heap]
 
 
 def main():

@@ -4,4 +4,5 @@ WORKDIR /app
 
 COPY process.py logger.conf ./
 
-ENTRYPOINT ["python", "process.py"]
+ENTRYPOINT ["python"]
+CMD ["process.py", "lines.txt"]
